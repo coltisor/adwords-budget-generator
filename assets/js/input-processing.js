@@ -7,25 +7,27 @@ function inputPreProcessing(multilineString) {
 	  this[index] = this[index].trim();
 	}, lines);
 
-	if (lines[0] == 'Budget History:') lines.splice(0,1); //TODO add +1 to messages line index
+	//TODO uncomment when implementing: add +1 to messages line index
+	//if (lines[0] == 'Budget History:') lines.splice(0,1); 
 
 	return lines;
 } 
 
-function parseDate(string) {
+function parseDate(string, index) {
 	const datePattern = /^(0[1-9]|1[012])[- \.](0[1-9]|[12][0-9]|3[01])[- \.](19|20)\d\d/;
 
 	let date = datePattern.exec(string);
 
 	if (date == null) {
-		messages.push('WARNING: line ' + index + ' was skiped, because it has no valid date.');
+		messages.push('WARNING: line ' + (index+1) + ' was skiped, because it has no valid date.');
+		console.log(messages[messages.length-1]);
 		return 'stop';
 	}
 
 	return new Date(date[0]);
 }
 
-function parseBudgetTimes(string) {
+function parseBudgetTimes(string, index) {
 	const budgetTimePattern = /(\d+(?:[.]\d+)?)\s*\((\d*):(\d*)\)/g; //can take float
 	let budgetTimes = [];
 	let maxBudget = 0; //budget can't be negative
@@ -36,7 +38,8 @@ function parseBudgetTimes(string) {
 
 		if (budgetTime) {
 			if (countBudgets >= 10) {
-				messages.push('WARNING: line ' + index + ' has more than 10 budgets. Only first 10 are used.');
+				messages.push('WARNING: line ' + (index+1) + ' has more than 10 budgets. Only first 10 are used.');
+				console.log(messages[messages.length-1]);
 				break;
 			 }
 			countBudgets++;
@@ -46,7 +49,8 @@ function parseBudgetTimes(string) {
 	} while (budgetTime);
 
 	if (!budgetTimes.length) {
-		messages.push('WARNING: line ' + index + ' was skiped, because it has no valid budgets.');
+		messages.push('WARNING: line ' + (index+1) + ' was skiped, because it has no valid budgets.');
+		console.log(messages[messages.length-1]);
 		return 'stop';
 	}
 
@@ -61,10 +65,10 @@ function inputProcessing(input) {
 	let dailyMaxBudgets = [];
 
 	lines.forEach(function(line, index) {
-		let date = parseDate(line);
+		let date = parseDate(line, index);
 		if (date == 'stop') return; // TODO return 'stop' for the conventional integrity?
 
-		let budgetTimes = parseBudgetTimes(line);
+		let budgetTimes = parseBudgetTimes(line, index);
 		if (budgetTimes == 'stop') return;  // TODO return 'stop' for the conventional integrity?
 		let maxBudget = budgetTimes.maxBudget;
 		budgetTimes = budgetTimes.budgetTimePairs;

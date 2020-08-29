@@ -35,14 +35,16 @@ function calculate() {
 	let input = $('#input').val();
 
 	if (!input.length) {
+	   messages.push('WARNING: Input is empty');
+	   console.log(messages[messages.length-1]);
 	   return;
-	   //TODO add message that input is empty
 	}
 
 	let budgets = inputProcessing(input);
 	if (!budgets.dateBudgetPairs.length) {
 	   messages = [];
 	   messages.push('ERROR: Invalid input data');
+	   console.log(messages[messages.length-1]);
 	   return;
 	}
 	let dailyMaxBudgets = budgets.dailyMaxBudgets;
@@ -51,15 +53,6 @@ function calculate() {
 	monthlyBudgets = groupByMonth(budgets);
 
 	console.log(monthlyBudgets);
-	//console.log('---');
 
-	// months.forEach(function(month, index) {
-	//    let dates = month.dates;
-	//    let monthlyMaxCost = getMonthlyMaxCosts(dates);
-	//    console.log(monthlyMaxCost);
-	// });
-
-	//console.log(dates);
 	console.log(messages);
-
 }
