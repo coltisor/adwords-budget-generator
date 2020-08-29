@@ -3,10 +3,10 @@
    <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="google-site-verification" content="X8kCpJjhAYlveLp1-w7IZz9mMXvYr-q0rXqpXPpUQng" />
+
       <!-- Primary Meta Tags -->
       <title>AdWords Budgets</title>
-      <meta name="title" content="adWordsBudget">
+      <meta name="title" content="AdWords Budgets - Web Recruitment Exercise">
       
       <!-- Bootstrap -->
       <link href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -29,138 +29,12 @@
          </div>
 
       </div>
+      
       <!-- Scripts-->
       <script src="assets/js/jquery-3.2.1.min.js"></script>
       <script src="assets/js/lodash.min.js"></script>
       <script src="assets/js/popper.min.js"></script>
       <script src="assets/js/bootstrap.min.js"></script>
-      <script>
-         let messages = [];
-
-         function preProcessing(lines) {
-            lines = lines.split('\n');
-
-            lines.forEach(function(item, index) {
-              this[index] = this[index].trim();
-            }, lines);
-
-            if (lines[0] == 'Budget History:') lines.splice(0,1); //TODO add +1 to messages line index
-
-            return lines;
-         }
-
-         function processing(input) {
-            let lines = preProcessing(input);
-            let dates = [];
-
-            lines.forEach(function(item, index) {
-               const datePattern = /^(0[1-9]|1[012])[- \.](0[1-9]|[12][0-9]|3[01])[- \.](19|20)\d\d/;
-
-               let date = datePattern.exec(item);
-
-               if (date == null) {
-                  messages.push('WARNING: line ' + index + ' was skiped, because it has no valid date.');
-                  return;
-               }
-
-               date = new Date(date[0]); //
-
-               const budgetTimePattern = /(\d+(?:[.]\d+)?)\s*\((\d*:\d*)\)/g; //can take float
-               let budgetTimes = [];
-               let maxBudget = 0; //budget can't be negative
-               let countBudgets = 0;
-
-               do {
-                   budgetTime = budgetTimePattern.exec(item);
-
-                   if (budgetTime) {
-                     if (countBudgets >= 10) {
-                        messages.push('WARNING: line ' + index + ' has more than 10 budgets. Only first 10 are used.');
-                        break;
-                     }
-                     countBudgets++;
-                     budgetTimes.push({budget: parseFloat(budgetTime[1]), time: budgetTime[2]});
-                     if (budgetTime[1] > maxBudget) maxBudget = parseFloat(budgetTime[1]);
-                   }
-
-               } while (budgetTime);
-
-               if (!budgetTimes.length) {
-                  messages.push('WARNING: line ' + index + ' was skiped, because it has no valid budgets.');
-                  return;
-               }
-
-               //TODO sort and delete duplicates on budgetTimes 
-
-               dates.push({date: date, budgetTimes: budgetTimes, maxBudget: maxBudget});
-            }, lines);
-
-            return dates;
-         }
-
-         function groupByMonth(dates) {
-            dates = _.chain(dates)
-                     .groupBy(function(item) {
-                           return item.date.getMonth() + item.date.getYear();
-                        })
-                     .map((value, key) => ({ monthYear: key, dates: value }))
-                     .value();
-
-            return dates;
-         }
-
-         function getMonthlyBudget(dates) {
-            let monthlyBudgets = [];
-
-            dates.forEach(function(date, index) {
-               monthlyBudgets = monthlyBudgets.concat(date.budgetTimes.map(function(budgetTime) { return budgetTime.budget; }));
-            });
-
-            return monthlyBudgets.reduce((a, b) => a + b, 0);
-         }
-
-         function getMonthlyMaxCosts(dates) {
-            let maxBudgets = [];
-
-            dates.forEach(function(date, index) {
-               maxBudgets.push(date.maxBudget);
-            });
-
-            return maxBudgets.reduce((a, b) => a + b, 0);
-         }
-
-         function calculate() {
-            console.clear();
-            messages = [];
-            let input = $('#input').val();
-
-            if (!input.length) {
-               return;
-               //TODO add message
-            }
-
-            let dates = processing(input);
-
-            if (!dates.length) {
-               messages = [];
-               messages.push('ERROR: Invalid input data');
-            }
-
-            months = groupByMonth(dates);
-            
-            console.log(months);
-            console.log('---');
-
-            months.forEach(function(month, index) {
-               let dates = month.dates;
-               let monthlyMaxCost = getMonthlyMaxCosts(dates);
-               console.log(monthlyMaxCost);
-            });
-
-            //console.log(dates);
-            console.log(messages);
-
-         }
-      </script>
+      <script src="assets/js/custom.js"></script>
    </body>
 </html>
