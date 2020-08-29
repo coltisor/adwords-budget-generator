@@ -1,4 +1,4 @@
-let messages = [];
+var messages = [];
 
 function inputPreProcessing(multilineString) {
 	lines = multilineString.split('\n');
@@ -7,7 +7,7 @@ function inputPreProcessing(multilineString) {
 	  this[index] = this[index].trim();
 	}, lines);
 
-	//TODO uncomment when implementing: add +1 to messages line index
+	//TODO uncomment when implementing the following: add +1 to messages line index when splice
 	//if (lines[0] == 'Budget History:') lines.splice(0,1); 
 
 	return lines;
@@ -31,18 +31,11 @@ function parseBudgetTimes(string, index) {
 	const budgetTimePattern = /(\d+(?:[.]\d+)?)\s*\((\d*):(\d*)\)/g; //can take float
 	let budgetTimes = [];
 	let maxBudget = 0; //budget can't be negative
-	let countBudgets = 0;
 
 	do {
 		budgetTime = budgetTimePattern.exec(string);
 
 		if (budgetTime) {
-			if (countBudgets >= 10) {
-				messages.push('WARNING: line ' + (index+1) + ' has more than 10 budgets. Only first 10 are used.');
-				console.log(messages[messages.length-1]);
-				break;
-			 }
-			countBudgets++;
 			budgetTimes.push({budget: parseFloat(budgetTime[1]), hours: parseInt(budgetTime[2]), minutes: parseInt(budgetTime[3])});
 			if (budgetTime[1] > maxBudget) maxBudget = parseFloat(budgetTime[1]);
 		}
@@ -56,13 +49,14 @@ function parseBudgetTimes(string, index) {
 
 	//TODO make sure budgets are sorted and without duplicates
 	//Handle it somehow relevant ?
+	
 	return {budgetTimePairs: budgetTimes, maxBudget: maxBudget}
 }
 
 function inputProcessing(input) {
 	let lines = inputPreProcessing(input);
 	let budgets = [];
-	let dailyMaxBudgets = [];
+	let dailyBiggestBudgets = [];
 
 	lines.forEach(function(line, index) {
 		let date = parseDate(line, index);
@@ -73,10 +67,10 @@ function inputProcessing(input) {
 		let maxBudget = budgetTimes.maxBudget;
 		budgetTimes = budgetTimes.budgetTimePairs;
 
-		dailyMaxBudgets.push({date: date, maxBudget: maxBudget});
+		dailyBiggestBudgets.push({date: date, maxBudget: maxBudget});
 
 		budgetTimes.forEach(function(budgetTime) {
-			let dateTime = date;
+			let dateTime = new Date(date);
 			dateTime.setHours(budgetTime.hours);
 			dateTime.setMinutes(budgetTime.minutes);
 
@@ -87,5 +81,5 @@ function inputProcessing(input) {
 	//TODO make sure dates are sorted and without duplicates
 	//Handle it somehow relevant 
 
-	return {dateBudgetPairs: budgets, dailyMaxBudgets: dailyMaxBudgets};
+	return {dateBudgetPairs: budgets, dailyBiggestBudgets: dailyBiggestBudgets};
 }
