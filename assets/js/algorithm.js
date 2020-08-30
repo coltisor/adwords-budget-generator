@@ -119,6 +119,7 @@ function calculate() {
 	if (!input.length) {
 	   messages.push('WARNING: Input is empty');
 	   console.log(messages[messages.length-1]);
+	   showMessages();
 	   return;
 	}
 
@@ -127,6 +128,7 @@ function calculate() {
 	   messages = [];
 	   messages.push('ERROR: Invalid input data');
 	   console.log(messages[messages.length-1]);
+	   showMessages();
 	   return;
 	}
 	let dailyBiggestBudgets = budgets.dailyBiggestBudgets;
