@@ -52,6 +52,42 @@ function generateDailyCostsOutput(dailyCosts) {
 	return listElement;
 }
 
+function generateDailyHistoryOutput(dailyHistory) {
+	let table = document.createElement("table");
+	table.classList.add('table');
+
+	for (let element of dailyHistory) {
+		let row = table.insertRow();
+
+		let cell = row.insertCell();
+		let text = document.createTextNode(element.date.toLocaleDateString());
+		cell.appendChild(text);
+
+		cell = row.insertCell();
+		text = document.createTextNode(element.budget);
+		cell.appendChild(text);
+
+		cell = row.insertCell();
+		text = document.createTextNode(element.costs);
+		cell.appendChild(text);
+	}
+	
+	let data = Object.keys(dailyHistory[0]);
+	let thead = table.createTHead();
+	let row = thead.insertRow();
+	let th = document.createElement("th");
+	th.innerText = 'Date';
+	row.appendChild(th);
+	th = document.createElement("th");
+	th.innerText = 'Budget';
+	row.appendChild(th);
+	th = document.createElement("th");
+	th.innerText = 'Costs';
+	row.appendChild(th);
+
+	return table;
+}
+
 function outputProcessing(costs) {
 	console.log(costs);
 
@@ -62,4 +98,9 @@ function outputProcessing(costs) {
 	let output = document.getElementById('costs');
 	output.innerHTML = '';
 	output.appendChild(dailyCostsOutput);
+
+	let dailyHistoryOutput = generateDailyHistoryOutput(dailyHistory);
+	output = document.getElementById('history');
+	output.innerHTML = '';
+	output.appendChild(dailyHistoryOutput);
 }
