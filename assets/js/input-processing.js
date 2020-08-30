@@ -31,13 +31,22 @@ function parseBudgetTimes(string, index) {
 	const budgetTimePattern = /(\d+(?:[.]\d+)?)\s*\((\d*):(\d*)\)/g; //can take float
 	let budgetTimes = [];
 	let maxBudget = 0; //budget can't be negative
+	let atBOTG = false; //is true when maxBudget is settled ad 00:00 (Begin Of The Day)
 
 	do {
 		budgetTime = budgetTimePattern.exec(string);
 
 		if (budgetTime) {
-			budgetTimes.push({budget: parseFloat(budgetTime[1]), hours: parseInt(budgetTime[2]), minutes: parseInt(budgetTime[3])});
-			if (budgetTime[1] > maxBudget) maxBudget = parseFloat(budgetTime[1]);
+			let hours = parseInt(budgetTime[2]);
+			let minutes = parseInt(budgetTime[3]);
+			let budget = parseFloat(budgetTime[1]);
+
+			budgetTimes.push({budget: budget, hours: hours, minutes: minutes});
+
+			if (budget >= maxBudget) {
+				maxBudget = parseFloat(budgetTime[1]);
+				atBOTG = ((hours == 0) && (minutes == 0)) ? true : false;
+			}
 		}
 	} while (budgetTime);
 
@@ -49,8 +58,8 @@ function parseBudgetTimes(string, index) {
 
 	//TODO make sure budgets are sorted and without duplicates
 	//Handle it somehow relevant ?
-	
-	return {budgetTimePairs: budgetTimes, maxBudget: maxBudget}
+
+	return {budgetTimePairs: budgetTimes, atBOTG: atBOTG, maxBudget: maxBudget, lastBudget: budgetTimes[budgetTimes.length-1].budget}
 }
 
 function inputProcessing(input) {
@@ -60,14 +69,16 @@ function inputProcessing(input) {
 
 	lines.forEach(function(line, index) {
 		let date = parseDate(line, index);
-		if (date == 'stop') return; // TODO return 'stop' for the conventional integrity?
+		if (date == 'stop') return;
 
 		let budgetTimes = parseBudgetTimes(line, index);
-		if (budgetTimes == 'stop') return;  // TODO return 'stop' for the conventional integrity?
+		if (budgetTimes == 'stop') return;  
 		let maxBudget = budgetTimes.maxBudget;
+		let lastBudget = budgetTimes.lastBudget;
+		let atBOTG = budgetTimes.atBOTG;
 		budgetTimes = budgetTimes.budgetTimePairs;
 
-		dailyBiggestBudgets.push({date: date, maxBudget: maxBudget});
+		dailyBiggestBudgets.push({date: date, atBOTG: atBOTG, maxBudget: maxBudget, lastBudget: lastBudget});
 
 		budgetTimes.forEach(function(budgetTime) {
 			let dateTime = new Date(date);

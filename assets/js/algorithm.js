@@ -12,6 +12,76 @@ function groupByMonth(budgets) {
 	return monthlyBudgets;
 }
 
+function getMonthlyMaxCosts(dailyBiggestBudgets) {
+	let monthlyMaxCosts = _.chain(dailyBiggestBudgets)
+						.groupBy(function(item) {
+						   return [item.date.getMonth(), item.date.getFullYear()];
+						})
+						.map((value, key) => ({ month: key, year: key, maxCost: value }))
+						.value();
+
+	monthlyMaxCosts.forEach(function(monthlyMaxCost, index) {
+		monthlyMaxCost = monthlyMaxCost.maxCost;
+		let MaxCost = 0;
+
+		let currentDate = new Date(monthlyMaxCost[0].date);
+		let endDate = new Date(currentDate.getFullYear(), currentDate.getMonth()+1, 1);
+		let currentCost = {lastBudget: 0, maxBudget: 0};
+		let previousCost = {lastBudget: 0, maxBudget: 0};
+
+		while ((currentDate.getTime() < endDate.getTime())) {
+			let found = false;
+
+			for (let dailyMaxCost of monthlyMaxCost) {
+				if (dailyMaxCost.date.getTime() == currentDate.getTime()) {
+					currentCost = dailyMaxCost;
+					found = true;
+					break;
+				}
+			}
+
+			if (!found) {
+				MaxCost += currentCost.lastBudget;
+			} else if ((previousCost.lastBudget >= currentCost.maxBudget) && (!currentCost.atBOTG)) {
+				MaxCost += previousCost.lastBudget;
+			} else {
+				MaxCost += currentCost.maxBudget;
+			}
+
+			console.log();
+
+			previousCost = currentCost;
+			currentDate.setDate(currentDate.getDate()+1);
+		}
+
+		let month = monthlyMaxCosts[index].month.split(',');
+		let year = month[1];
+		month = month[0];
+
+		monthlyMaxCosts[index].month = month;
+		monthlyMaxCosts[index].year = year;
+
+		monthlyMaxCosts[index].maxCost = MaxCost;
+	});
+
+	return monthlyMaxCosts;
+}
+
+function getMaxCostPerMonth(date, monthlyMaxCosts) {
+	let month = date.getMonth();
+	let year = date.getFullYear();
+	let maxCost = 0;
+	
+	for (let monthlyMaxCost of monthlyMaxCosts) {
+		if (monthlyMaxCost.month == month && monthlyMaxCost.year == year) {
+			maxCost = monthlyMaxCost.maxCost;
+			break;
+		}
+	}
+
+	return maxCost;
+}
+
 function getCurrentBudget(budgets, costDate) {
 
 	let prevBudgets = budgets.filter(function(budget) {
@@ -60,20 +130,22 @@ function calculate() {
 	   return;
 	}
 	let dailyBiggestBudgets = budgets.dailyBiggestBudgets;
-	budgets = budgets.dateBudgetPairs;
+	let monthlyMaxCosts = getMonthlyMaxCosts(dailyBiggestBudgets);
 
+	budgets = budgets.dateBudgetPairs;
 	let monthlyBudgets = groupByMonth(budgets);
 	let costs = [];
 
 	monthlyBudgets.forEach(function(monthlyBudget, index) {
 		let budgets = monthlyBudget.budgets;
-		let maxCostsPerMonth = 10;
 		let totalCostPerMonth = 0;
 
 		let currentDate = new Date(budgets[0].date);
 		currentDate.setHours(0);
 		currentDate.setMinutes(0);
 		let endDate = new Date(currentDate.getFullYear(), currentDate.getMonth()+1, 1);
+
+		let maxCostPerMonth = getMaxCostPerMonth(currentDate, monthlyMaxCosts); 
 
 		while ((currentDate.getTime() < endDate.getTime())) {
 			let totalCostPerDay = 0; // cant'be > than 2*CurrentMoment.Budget
@@ -89,7 +161,7 @@ function calculate() {
 				let cost = generateRandomCost(currentBudget);
 
 				if ((cost + totalCostPerDay <= currentBudget*budgetCoefficient)
-					&(cost + totalCostPerMonth <= maxCostsPerMonth)) {
+					&(cost + totalCostPerMonth <= maxCostPerMonth)) {
 					totalCostPerDay += cost;
 					totalCostPerMonth += cost;
 					costs.push({date: costDate, cost: cost});
