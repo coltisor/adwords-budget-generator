@@ -1,7 +1,7 @@
 const budgetCoefficient = 2; //The cumulated daily <= 2xCurrentBudget
 const maxCostsNrPerDay = 10; //
 
-function groupByMonth(budgets) {
+function groupBudgetsByMonth(budgets) {
 	monthlyBudgets 	=  _.chain(budgets)
 						.groupBy(function(item) {
 						   return item.date.getMonth() + item.date.getYear();
@@ -133,7 +133,7 @@ function calculate() {
 	let monthlyMaxCosts = getMonthlyMaxCosts(dailyBiggestBudgets);
 
 	budgets = budgets.dateBudgetPairs;
-	let monthlyBudgets = groupByMonth(budgets);
+	let monthlyBudgets = groupBudgetsByMonth(budgets);
 	let costs = [];
 
 	monthlyBudgets.forEach(function(monthlyBudget, index) {
@@ -164,7 +164,7 @@ function calculate() {
 					&(cost + totalCostPerMonth <= maxCostPerMonth)) {
 					totalCostPerDay += cost;
 					totalCostPerMonth += cost;
-					costs.push({date: costDate, cost: cost});
+					costs.push({date: costDate, cost: cost, budget: currentBudget});
 				}
 			}
 
@@ -172,5 +172,5 @@ function calculate() {
 		};
 	});
 
-	console.log(costs);
+	outputProcessing(costs);
 }

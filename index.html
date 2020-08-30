@@ -14,17 +14,44 @@
 
    </head>
    <body>
-      <div class="container mt-5">
+      <div class="container my-5">
          <div class="row">
             <div class="col-12 mb-5">
                <h1>AdWords Budgets</h1>
             </div>
             <div class="col-md-6">
-               <textarea id="input" class="form-control" rows="10"></textarea>
+               <ul class="nav nav-tabs" id="myTab" role="tablist">
+                  <li class="nav-item">
+                     <a class="nav-link disabled" id="editor-tab" data-toggle="tab" href="#editor" role="tab" aria-controls="editor" aria-selected="false">Editor</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link active" id="raw-tab" data-toggle="tab" href="#raw" role="tab" aria-controls="raw" aria-selected="true">Raw</a>
+                  </li>
+               </ul>
+               <div class="tab-content" id="myTabContent">
+                  <div class="tab-pane py-2" id="editor" role="tabpanel" aria-labelledby="editor-tab">
+                  </div>
+                  <div class="tab-pane fade show active py-2" id="raw" role="tabpanel" aria-labelledby="raw-tab">
+                     <textarea id="input" class="form-control" rows="10"></textarea>
+                  </div>
+               </div>
                <button class="btn btn-primary mt-4 float-right" onclick="calculate()">Calculate</button>
             </div>
-            <div class="col-md-6">
-               <p id="output"></p>
+            <div id="output" class="col-md-6">
+               <ul class="nav nav-tabs" id="myTab" role="tablist">
+                  <li class="nav-item">
+                     <a class="nav-link active" id="costs-tab" data-toggle="tab" href="#costs" role="tab" aria-controls="costs" aria-selected="true">Generated Costs</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">Daily History</a>
+                  </li>
+               </ul>
+               <div class="tab-content" id="myTabContent">
+                  <div class="tab-pane fade show active py-2" id="costs" role="tabpanel" aria-labelledby="costs-tab">
+                  </div>
+                  <div class="tab-pane fade py-2" id="history" role="tabpanel" aria-labelledby="history-tab">
+                  </div>
+               </div>
             </div>
          </div>
 
@@ -39,5 +66,6 @@
       <!-- Custom Scripts-->
       <script src="assets/js/input-processing.js"></script>
       <script src="assets/js/algorithm.js"></script>
+      <script src="assets/js/output-processing.js"></script>
    </body>
 </html>
