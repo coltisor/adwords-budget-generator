@@ -34,7 +34,7 @@ function groupDailyHistory(costs) {
 }
 
 function generateDailyCostsOutput(dailyCosts) {
-	listElement = document.createElement('ul');
+	listElement = document.createElement('ol');
 
 	dailyCosts.forEach(function (dailyCost, index) {
     	let li = document.createElement('li');
@@ -55,6 +55,7 @@ function generateDailyCostsOutput(dailyCosts) {
 function generateDailyHistoryOutput(dailyHistory) {
 	let table = document.createElement("table");
 	table.classList.add('table');
+	table.classList.add('table-striped');
 
 	for (let element of dailyHistory) {
 		let row = table.insertRow();
@@ -88,9 +89,26 @@ function generateDailyHistoryOutput(dailyHistory) {
 	return table;
 }
 
-function outputProcessing(costs) {
-	console.log(costs);
+function showMessages() {
+	if (!messages.length)
+		return;
 
+	let alert = '<div class="alert alert-warning alert-dismissible fade show" role="alert"><ul>';
+
+	messages.forEach(function(message, index) {
+		alert += '<li>' + message + '</li>';
+	})
+
+    alert += '</ul><button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+      	+ '<span aria-hidden="true">&times;</span>'
+        + '</button>'
+        + '</div>';
+
+	output = document.getElementById('messages');
+	output.innerHTML = alert;
+}
+
+function outputProcessing(costs) {
 	let dailyCosts = groupCostsByDay(costs);
 	let dailyHistory = groupDailyHistory(dailyCosts);
 
@@ -103,4 +121,6 @@ function outputProcessing(costs) {
 	output = document.getElementById('history');
 	output.innerHTML = '';
 	output.appendChild(dailyHistoryOutput);
+
+	showMessages();
 }
