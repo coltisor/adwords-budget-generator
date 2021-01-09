@@ -19,4 +19,4 @@ Randomly generate the ad-word costs following the above rules
 
 - Show a daily history of what was the max budget set and what costs the campaign generated for the given period.
 
-I **Solution:** https://coltisor.github.io/adwords-budget-generator/
+**Solution:** https://coltisor.github.io/adwords-budget-generator/
