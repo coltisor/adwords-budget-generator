@@ -16,7 +16,6 @@ set by the end-user in the moment the cost generation is initiated, considering 
 
 - Create an algorithm that takes as input the history of the daily budget adjustments by an end-user, over a period of 3 months and:
 Randomly generate the ad-word costs following the above rules
-
 - Show a daily history of what was the max budget set and what costs the campaign generated for the given period.
 
 **Solution:** https://coltisor.github.io/adwords-budget-generator/
