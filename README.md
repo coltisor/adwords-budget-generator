@@ -1,4 +1,5 @@
-**Web Recruitment Exercise - AdWords Budgets
+
+Web Recruitment Exercise - AdWords Budgets
 
 Daily history of the budget set and consumption for the AdWords campaign.
 
@@ -11,11 +12,11 @@ set by the end-user in the moment the cost generation is initiated, considering 
 - The cumulated daily cost can not be greater than two times of what the budget is set in the given moment
 - The cumulated cost per month can not not be greater than the sum of the maximum budget for each days within the month
 
-**Requirements:
+Requirements:
 
 - Create an algorithm that takes as input the history of the daily budget adjustments by an end-user, over a period of 3 months and:
 Randomly generate the ad-word costs following the above rules
 
 - Show a daily history of what was the max budget set and what costs the campaign generated for the given period.
 
-**Solution: https://coltisor.github.io/adwords-budget-generator/
+Solution: https://coltisor.github.io/adwords-budget-generator/
