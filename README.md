@@ -18,31 +18,32 @@ set by the end-user in the moment the cost generation is initiated, considering 
 Randomly generate the ad-word costs following the above rules
 - Show a daily history of what was the max budget set and what costs the campaign generated for the given period.
 
-##Example
+## Example
 
-**Input:** 
+### Input
 
-Budget History: 
-01.01.2019: First budget 7 (10:00), 0 (11:00), 1 (12:00), 6 (23:00); 01.05.2019: 2 (10:00); 
-01.06.2019: 0 (00:00); 
-02.09.2019: 1 (13:13); 
-03.01.2019: 0 (12:00), 1 (14:00) 
+**Budget History:**
+
+- 01.01.2019: First budget 7 (10:00), 0 (11:00), 1 (12:00), 6 (23:00); 01.05.2019: 2 (10:00); 
+- 01.06.2019: 0 (00:00); 
+- 02.09.2019: 1 (13:13); 
+- 03.01.2019: 0 (12:00), 1 (14:00) 
  
-**Output: (eg.)** 
+### Output 
 
-Costs generated:
-a.  01.01.2019: 1 (10:05); 3.12 (10:50); 1 (23:59) 
-b.  01.02.2019: 2.1 (11:00); 
-c.  01.03.2019: 1.1 (10:00); 1.2 (12:00), 2.9 (11:00) 
-d.  01.04.2019: 8 (10:00) 
-e.  01.05.2019: 2 (07:00), 3 (09:00)  
-f.  01.06.2019: 0 
-g.  01.07.2019: 0 
-h.  01.08.2019: 0 
+**Costs generated:**
+- a.  01.01.2019: 1 (10:05); 3.12 (10:50); 1 (23:59) 
+- b.  01.02.2019: 2.1 (11:00); 
+- c.  01.03.2019: 1.1 (10:00); 1.2 (12:00), 2.9 (11:00) 
+- d.  01.04.2019: 8 (10:00) 
+- e.  01.05.2019: 2 (07:00), 3 (09:00)  
+- f.  01.06.2019: 0 
+- g.  01.07.2019: 0 
+- h.  01.08.2019: 0 
 
  
-Daily History report:
----------------------------------
+**Daily History report:**
+
 | Date        | Budget  | Costs |
 |-------------|---------|-------|
 | 01.01.2019  | 7       | 5.12  |
@@ -54,6 +55,7 @@ Daily History report:
 | 01.07.2019  | 0       | 0     |
 | 01.08.2019  | 0       | 0     |
 | 01.09.2019  | ...     | ...   |
----------------------------------
 
-**Solution:** https://coltisor.github.io/adwords-budget-generator/
+## Solution
+
+https://coltisor.github.io/adwords-budget-generator/
